@@ -1,0 +1,201 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Osoba {
+protected:
+    string rola;
+
+private:
+    string imie;
+    string nazwisko;
+
+public:
+    Osoba(){
+        rola = "Osoba";
+    }
+
+    void setImie(string i){
+        imie = i;
+    }
+
+    void setNazwisko(string n){
+        nazwisko = n;
+    }
+
+    string getImie(){
+        return imie;
+    }
+
+    string getNazwisko(){
+        return nazwisko;
+    }
+
+    virtual void drukuj(){
+        cout<<"OSOBA: "<<imie <<" "<<nazwisko<<endl;
+    }
+
+    virtual ~Osoba(){}
+};
+
+class Student : public Osoba {
+private:
+    int indeks;
+public:
+    Student(){
+        rola= "Student";
+        indeks = 0;
+    }
+
+    void setIndeks(int i){
+        if(i >= 100000 && i <= 999999)
+            indeks = i;
+        else
+            cout<<"Indeks musi miec 6 cyfr"<<endl;
+    }
+
+    int getIndeks(){
+        return indeks;
+    }
+
+    void drukuj() override{
+        cout<<"STUDENT: "<<getImie()<<" "<< getNazwisko()<<" Indeks: "<< indeks<<endl;
+    }
+};
+
+class Pracownik : public Osoba {
+private:
+    string stanowisko;
+    string stopien;
+
+public:
+    Pracownik(){
+        rola = "Pracownik";
+    }
+
+    void setStanowisko(string s){
+        stanowisko = s;
+    }
+
+    void setStopien(string sto){
+        stopien = sto;
+    }
+
+    void drukuj() override{
+        cout <<"PRACOWNIK: "<< getImie() <<" "<< getNazwisko()<<" Stanowisko: "<<stanowisko<<" Stopien naukowy: "<<stopien<< endl;
+    }
+};
+
+int main(){
+
+    Osoba* tab[10];
+    int liczbaOsob = 0;
+
+    while(true){
+
+        int operacja;
+        cout<<endl;
+        cout<<"1. Dodaj osobe"<<endl;
+        cout<<"2. Wyswietl liste"<<endl;
+        cout<<"3. Wyjscie"<<endl;
+        cout<<"Wybor: "<<endl;
+        cin >> operacja;
+
+        switch(operacja) {
+
+        case 1: {
+
+            int status; //1-student 2-pracownik
+            cout<<endl;
+            cout<<"1. Student"<<endl;
+            cout<<"2. Pracownik"<<endl;
+            cout<<"Wybor: "<<endl;
+
+            cin>> status;
+
+            if(liczbaOsob >= 10){
+                cout<<"Tablica pelna"<<endl;
+                break;
+            }
+
+            if(status == 1){
+
+                Student* s = new Student;
+
+                string imie;
+                string nazwisko;
+                int indeks;
+
+                cout<<"Imie: ";
+                cin>>imie;
+
+                cout<<"Nazwisko: ";
+                cin>>nazwisko;
+
+                cout<<"Indeks: ";
+                cin>>indeks;
+
+                s->setImie(imie);
+                s->setNazwisko(nazwisko);
+                s->setIndeks(indeks);
+
+                tab[liczbaOsob++] = s;
+            }
+
+            else if(status == 2){
+
+                Pracownik* p = new Pracownik;
+
+                string imie;
+                string nazwisko;
+                string stanowisko;
+                string stopien;
+
+                cout<<"Imie: ";
+                cin>>imie;
+
+                cout<<"Nazwisko: ";
+                cin>>nazwisko;
+
+                cout<<"Stanowisko: ";
+                cin>>stanowisko;
+
+                cout<<"Stopien naukowy: ";
+                cin>>stopien;
+
+                p->setImie(imie);
+                p->setNazwisko(nazwisko);
+                p->setStanowisko(stanowisko);
+                p->setStopien(stopien);
+
+                tab[liczbaOsob++] = p;
+            }
+
+            break;
+        }
+
+        case 2: {
+
+            cout<<"\nLISTA\n";
+
+            for(int i = 0; i< liczbaOsob; i++){
+                tab[i]->drukuj();
+            }
+
+            break;
+        }
+
+        case 3: {
+
+            for(int i = 0; i < liczbaOsob; i++){
+                delete tab[i];
+            }
+
+            return 0;
+        }
+
+        default:
+            cout << "Nieznana operacja"<<endl;
+        }
+    }
+}
